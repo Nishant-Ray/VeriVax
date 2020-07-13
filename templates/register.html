@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <!-- CSS stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/static.css') }}">
+    
+    <!-- JavaScripts -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/primary.js') }}"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
+    
+    <title>Vaccify | Register</title>
+    
+</head>
+
+<body style="font-family: 'Source Sans Pro', sans-serif; color: white; text-align: center; background-color: rgb(23, 23, 29);">
+    <br><br><br>
+
+    <div id="wrap">
+        <br><br>
+        <a class="klasse-title" style="text-align: center;" href="/">Vaccify</a>
+        <br><br>
+
+        <form class="needs-validation" novalidate action="{{ url_for('register') }}" method="post">
+            <div class="form-group">
+                <div style="text-align: left; padding: 0% 150px;">
+                    <label for="validationCustom01"><b>Name</b></label>
+                    <input type="text" class="form-control" name="nm" id="validationCustom01" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid name.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div style="text-align: left; padding: 0% 150px;">
+                    <label for="validationCustom02"><b>Date of Birth</b></label>
+                    <input type="date" class="form-control" name="dob" id="validationCustom02" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid name.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div style="text-align: left; padding: 0% 150px;">
+                    <label for="validationCustom03"><b>User Type</b></label>
+                    <select class="custom-select" id="inputGroupSelect01" name="type" style="height: 50px; font-size: 22px; color: black;">
+                        <option selected disabled>Choose...</option>
+                        <option value="1">General User</option>
+                        <option value="2">Doctor</option>
+                        <option value="3">Institution Manager</option>
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid age.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div style="text-align: left; padding: 0% 150px;">
+                    <label for="validationCustom04"><b>Email</b></label>
+                    <input type="email" class="form-control" name="em" id="validationCustom04" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid email.
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <div style="padding: 0% 150px; text-align: left;">
+                    <label for="validationCustom05"><b>Password</b></label>
+                    <input type="password" class="form-control" name="pw" id="validationCustom05" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a valid password.
+                    </div>
+                </div>
+                <br><br>
+                <button class="submit-button" type="submit"><a class="submit-link" style="color: white;">Register</a></button>
+            </div>
+        </form>
+        
+        <p style="text-align: center">
+            If you already have an account,
+            <a class="link" style="color: #da6bce;" href="/login">login here!</a>
+        </p>
+        <br><br>
+    </div>
+
+</body>
+
+</html>

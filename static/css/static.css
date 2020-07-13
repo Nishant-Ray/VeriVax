@@ -1,0 +1,174 @@
+::selection {
+    background: rgba(125, 87, 255, 0.45);
+    text-shadow: 0px 0px 2px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgb(255, 255, 255);
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 0px;
+    background: rgb(75, 74, 80);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(125, 87, 255);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(102, 68, 219);
+}
+
+.klasse-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    background-color: rgb(125, 87, 255);
+    padding: 5px 20px;
+    border-radius: 7.5px;
+    margin: auto;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.5s;
+}
+
+.klasse-title:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: rgb(102, 68, 219);
+    text-decoration: none;
+    color: white;
+}
+
+#navbar {
+    color: white;
+    padding: 20px 0px 30px 20px;
+}
+
+.navlink {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+    padding: 15px 30px;
+    margin-left: 25px;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+.navlink:hover {
+    color: white;
+    text-decoration: none;
+    background-color: rgba(125, 87, 255, 0.5);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.active {
+    color: rgb(196, 60, 196);
+}
+
+.active:hover {
+    color: white;
+    background-color: rgba(196, 60, 196, 0.5);
+}
+
+.profile {
+    cursor: pointer;
+    width: 75px;
+    height: 75px;
+    border-radius: 50px;
+    margin-right: 20px;
+    transition: all 0.3s;
+    float: right;
+}
+
+.profile:hover {
+    transform: scale(1.1);
+}
+
+.user-profile {
+    cursor: pointer;
+    width: 75px;
+    height: 75px;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+.user-profile:hover {
+    transform: scale(1.1);
+}
+
+.dropdown-menu {
+    display: block;
+    margin-top: -30px;
+    margin-left: -50px;
+    visibility: hidden;
+    position: relative;
+    float: right;
+    background-color: #f1f1f1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-menu a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    background-color: #ddd;
+}
+
+label {
+    font-size: 26px;
+}
+
+.form-control {
+    font-size: 24px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.submit-button {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+}
+
+.submit-link {
+    font-size: 28px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    background-color: rgb(125, 87, 255);
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit-link:hover {
+    background-color: rgb(102, 68, 219);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-decoration: none;
+    color: white;
+}
+
+.title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: white;
+}
+
+.subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: white;
+}
