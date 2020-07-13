@@ -32,80 +32,91 @@
 		<div style="padding-left: 90px; padding-top: 10px;">
 			<h1 class="title" style="padding-left: 40px;">Welcome {{ currentUser["name"] }}!</h1>
 			<br>
-			
-			<div>
-				<div class="section" style="height: 475px; text-align: left;">
-					<br>
-					<h1 class="subtitle" style="text-align: center;">Institute Members</h1>
-					<br>
-					{% set count = [] %}
-					{% for user in users if user["organization"] != None and user["id"] != currentUser["id"] and count|length < 3 %}
-						
-						<div style="text-align: left; padding-left: 125px;">
-							<img class="user-profile" src={{ user["profile"] }} alt="profile">
-							<div style="float: right; margin-top: 0px; margin-right: 100px;">
-								<h2 style="cursor: pointer;" onclick="window.open('/', '_self')">
-									<span style="font-weight: 600;">{{ user["name"] }} ({{ user["id"] }})</span>
-									<br>
-									{% if user["vaccine"] %}
-										<span style="font-size: 28px;">Vaccinated</span>
-									{% else %}
-										<span style="font-size: 28px; color: rgb(226, 113, 113);">Unvaccinated</span>
-									{% endif %}
-								</h2>
-							</div>
-						</div>
+
+			{% if currentUser["type"] == "Manager" %}
+
+				<div>
+					<div class="section" style="height: 475px; text-align: left;">
 						<br>
-
-						{% set x = count.append(0) %}
-					{% endfor %}
-
-					<div style="text-align: center; margin-top: 10px;">
-						<a class="submit-link" href="/members" style="margin: auto;">View More</a>
-					</div>
-				</div>
-
-				<div class="section" style="height: 200px;">
-					<br>
-					<h1 class="subtitle">Add Members</h1>
-					<br>
-					<form class="needs-validation" novalidate action="{{ url_for('index') }}" method="post">
-						<div class="form-group">
-							<div style="text-align: left;">
-								<input type="text" class="form-control" name="pw" placeholder="ID" id="validationCustom02" required style="width: 400px; margin: auto; margin-left: 50px;">
-								<button class="submit-button" type="submit" style="float: right; margin-top: -50px; margin-right: 50px;"><a class="submit-link" style="color: white;">Send</a></button>
+						<h1 class="subtitle" style="text-align: center;">Institute Members</h1>
+						<br>
+						{% set count = [] %}
+						{% for user in users if user["organization"] != None and user["id"] != currentUser["id"] and count|length < 3 %}
+							
+							<div style="text-align: left; padding-left: 125px;">
+								<img class="user-profile" src={{ user["profile"] }} alt="profile" onclick="window.open('/{{ user['id'] }}', '_self')">
+								<div style="float: right; margin-top: 0px; margin-right: 100px;">
+									<h2 style="cursor: pointer;" onclick="window.open('/{{ user['id'] }}', '_self')">
+										<span style="font-weight: 600;">{{ user["name"] }} ({{ user["id"] }})</span>
+										<br>
+										{% if user["vaccine"] %}
+											<span style="font-size: 28px;">Vaccinated</span>
+										{% else %}
+											<span style="font-size: 28px; color: rgb(226, 113, 113);">Unvaccinated</span>
+										{% endif %}
+									</h2>
+								</div>
 							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			
-			<br>
-
-			<div class="section" style="height: 200px; visibility: hidden;">
-				IGNORE THIS
-			</div>
-
-			<div class="section" style="margin-top: -275px;">
-				<br>
-				<h1 class="subtitle">Your Profile</h1>
-				
-				<div style="text-align: left; padding-left: 125px;">
-					<img class="user-profile" src="/profile_4.jpg" alt="profile">
-					<div style="float: right; margin-top: 0px; margin-right: 125px;">
-						<h2>
-							<span style="font-weight: 600;">Jane Doe ({{ currentUser["id"] }})</span>
 							<br>
-							<span style="font-size: 28px;">Vaccinated</span>
-						</h2>
+
+							{% set x = count.append(0) %}
+						{% endfor %}
+
+						<div style="text-align: center; margin-top: 10px;">
+							<a class="submit-link" href="/members" style="margin: auto;">View More</a>
+						</div>
+					</div>
+
+					<div class="section" style="height: 200px;">
+						<br>
+						<h1 class="subtitle">Add Members</h1>
+						<br>
+						<form class="needs-validation" novalidate action="{{ url_for('index') }}" method="post">
+							<div class="form-group">
+								<div style="text-align: left;">
+									<input type="text" class="form-control" name="pw" placeholder="ID" id="validationCustom02" required style="width: 400px; margin: auto; margin-left: 50px;">
+									<button class="submit-button" type="submit" style="float: right; margin-top: -50px; margin-right: 50px;"><a class="submit-link" style="color: white;">Send</a></button>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
+				
 				<br>
-				<div style="text-align: center; margin-top: 10px;">
-					<a class="submit-link" href="/settings" style="margin: auto;">Edit</a>
-				</div>
-			</div>
 
+				<div class="section" style="height: 200px; visibility: hidden;">
+					IGNORE THIS
+				</div>
+
+				<div class="section" style="margin-top: -275px;">
+					<br>
+					<h1 class="subtitle">Your Profile</h1>
+					
+					<div style="text-align: left; padding-left: 125px;">
+						<img class="user-profile" src="/profile_4.jpg" alt="profile">
+						<div style="float: right; margin-top: 0px; margin-right: 125px;">
+							<h2>
+								<span style="font-weight: 600;">Jane Doe ({{ currentUser["id"] }})</span>
+								<br>
+								<span style="font-size: 28px;">Vaccinated</span>
+							</h2>
+						</div>
+					</div>
+					<br>
+					<div style="text-align: center; margin-top: 10px;">
+						<a class="submit-link" href="/settings" style="margin: auto;">Edit</a>
+					</div>
+				</div>
+
+			{% elif currentUser["type"] == "General User" %}
+			
+				<!-- PRANAV WORK HERE -->
+			
+			{% else %}
+			
+				
+			
+			{% endif %}
 		</div>
 		<br>
 	</body>

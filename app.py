@@ -6,6 +6,11 @@ app = Flask(__name__)
 
 app.secret_key = "hello there"
 
+# alert = {
+#     "type": "invite", # invite, delete, or doctor update
+#     "from": "N4I2N521",
+# }
+
 users = []
 
 admin = {
@@ -17,7 +22,8 @@ admin = {
     "organization": "VMware",
     "id": "2VDMPG18",
     "vaccine": True,
-    "profile": "/profile_4.jpg"
+    "profile": "/profile_4.jpg",
+    "alerts": []
 }
 
 kevin = {
@@ -27,9 +33,10 @@ kevin = {
     "dob": "1992-07-21",
     "type": "Member",
     "organization": "VMware",
-    "id": "C54N521B",
+    "id": "6U8LJY87",
     "vaccine": True,
-    "profile": "/profile_1.jpeg"
+    "profile": "/profile_1.jpeg",
+    "alerts": []
 }
 
 rob = {
@@ -41,7 +48,8 @@ rob = {
     "organization": "VMware",
     "id": "C54N521B",
     "vaccine": False,
-    "profile": "/profile_2.jpg"
+    "profile": "/profile_2.jpg",
+    "alerts": []
 }
 
 nancy = {
@@ -53,7 +61,8 @@ nancy = {
     "organization": "VMware",
     "id": "9E9V5XQ1",
     "vaccine": True,
-    "profile": "/profile_3.jpg"
+    "profile": "/profile_3.jpg",
+    "alerts": []
 }
 
 users.append(admin)
@@ -116,14 +125,17 @@ def register():
         else:
             type = "Manager"
 
-
         newUser = {
             "email": request.form["em"],
             "password": request.form["pw"],
             "name": request.form["nm"],
             "dob": request.form["dob"],
             "type": type,
-            "organization": None
+            "organization": None,
+            "id": generateID(),
+            "vaccine": False,
+            "profile": "/default_profile.png",
+            "alerts": []
         }
 
         accountExists = False
@@ -154,6 +166,33 @@ def members():
 
     return render_template("members.html")
 
+@app.route('/<id>')
+def user(id):
+
+    for user in users:
+        if user["id"] == id:
+            return render_template("user.html", specifiedUser=user)
+
+    return redirect(url_for("members"), code=302)
+
+@app.route('/delete:<id>')
+def delete(id):
+    global users
+
+    for user in users:
+        if user["id"] == id:
+
+            deleteAlert = {
+                "type": "delete", # invite, delete, or doctor update
+                "from": session["currentUser"]["id"]
+            }
+            user["alerts"].append(deleteAlert)
+
+            user["organization"] = None
+            break
+
+    return redirect(url_for("members"), code=302)
+
 @app.route("/logout")
 def logout():
     session.pop("currentUser", None)
@@ -171,15 +210,34 @@ def logout():
 def generateID():
 
     id = ''
+    unique = True
+
+    while True:
+        unique = True
+        id = randomSequence(8)
+
+        for user in users:
+            if id == user["id"]:
+                unique = False
+
+        if unique:
+            break
+        # else:
+        #     continue
+
+    return id
+
+def randomSequence(length):
+    id = ''
     letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     nums = '1234567890'
 
-    for x in range(8):
-        if(random.randint(0, 1) == 0):
+    for x in range(length):
+        if random.randint(0, 1) == 0:
             id += letters[random.randint(0, 25)] 
         else:
             id += nums[random.randint(0, 9)] 
-
+    
     return id
 
 @app.route('/default_profile.png')

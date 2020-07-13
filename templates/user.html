@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<!-- CSS stylesheets -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/static.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+		<!-- JavaScripts -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/primary.js') }}"></script>
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+		<!-- Icons -->
+		<script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
+		
+		<title>Vaccify</title>
+	</head>
+
+	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;">
+		<div id="navbar">
+			<a class="klasse-title" href="/">Vaccify</a>
+			<a class="navlink" href="/">Home</a>
+			<a class="navlink active" href="/members">Members</a>
+			<a class="navlink" href="/settings">Settings</a>
+			<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+		</div>
+		
+        <div style="padding-left: 90px; padding-top: 10px;">
+            <img class="user-profile" src={{ specifiedUser["profile"] }} alt="profile" style="float: left; margin-left: 50px;">
+			<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ specifiedUser["name"] }}, Born on June 7th, 1991</h1>
+            <a class="submit-link" href="mailto:{{ specifiedUser['email'] }}" style="color: white; margin-left: 175px; margin-top: 20px;">Send Message</a>
+            <br><br><br><br>
+			
+            <div class="section" style="width: 1350px; height: 450px;">
+                <br><br>
+                
+                <div style="float: left; text-align: left; margin-left: 150px;">
+                    {% if specifiedUser["vaccine"] %}
+                        <h1 style="font-size: 48px; font-weight: 600;">Vaccinations:</h1>
+                        <ul style="font-size: 36px;">
+                            <li>January 7th, 2021</li>
+                            <li>February 24th, 2021</li>
+                        </ul>
+                    {% else %}
+                        <h1 style="color: rgb(226, 113, 113)">Unvaccinated</h1>
+                    {% endif %}
+                </div>
+
+                <div style="float: left; text-align: left; margin-left: 150px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">COVID-19 Exposure:</h1>
+                    <ul style="font-size: 36px;">
+                        <li>Tested Positive: September 9th, 2020</li>
+                        <li>Recovered: October 17th, 2020</li>
+                    </ul>
+                </div>
+                
+                <div style="float: left; text-align: left; margin-left: 450px; margin-top: 25px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">Past/Current Conditions:</h1>
+                    <ul style="font-size: 36px; padding-left: 100px;">
+                        <li>Asthma (lifelong)</li>
+                        <li>Asthma (lifelong)</li>
+                    </ul>
+                </div>
+
+            </div>
+
+		</div>
+		<br>
+	</body>
+</html>

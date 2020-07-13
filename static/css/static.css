@@ -172,3 +172,49 @@ label {
     font-weight: 500;
     color: white;
 }
+
+.section {
+    background-color: rgb(37, 36, 41);
+    color: white;
+    border-radius: 20px;
+    display: inline-block;
+    width: 655px;
+    height: 250px;
+    margin: auto;
+    margin-right: 20px;
+    vertical-align: top;
+    text-align: center;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 20px;
+    padding-top: 12.5px;
+    padding-left: 17.5px;
+    display: inline-block;
+    margin-right: 25px;
+    transition: all 0.2s;
+    background-color: rgb(55, 53, 59);
+}
+
+.icon:hover {
+    transform: scale(1.1);
+    text-decoration: none;
+}
+
+.positive {
+    color: rgb(37, 163, 37);
+}
+
+.positive:hover {
+    color: rgb(37, 163, 37);
+}
+
+.negative {
+    color: rgb(216, 102, 102);
+}
+
+.negative:hover {
+    color: rgb(216, 102, 102);
+}
