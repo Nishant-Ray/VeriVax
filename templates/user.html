@@ -17,52 +17,114 @@
 		<!-- Icons -->
 		<script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
 		
-		<title>Vaccify</title>
+		<title>VeriVax</title>
 	</head>
 
 	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;">
-		<div id="navbar">
-			<a class="klasse-title" href="/">Vaccify</a>
-			<a class="navlink" href="/">Home</a>
-			<a class="navlink active" href="/members">Members</a>
-			<a class="navlink" href="/settings">Settings</a>
-			<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
-		</div>
-		
+        
+        {% if currentUser["type"] == "Manager" %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/members">Members</a>
+                <a class="navlink" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% elif currentUser["type"] == "Member" %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/alerts">Alerts</a>
+                <a class="navlink" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% else %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/patients">Patients</a>
+                <a class="navlink" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% endif %}
+            
         <div style="padding-left: 90px; padding-top: 10px;">
             <img class="user-profile" src={{ specifiedUser["profile"] }} alt="profile" style="float: left; margin-left: 50px;">
-			<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ specifiedUser["name"] }}, Born on June 7th, 1991</h1>
-            <a class="submit-link" href="mailto:{{ specifiedUser['email'] }}" style="color: white; margin-left: 175px; margin-top: 20px;">Send Message</a>
+			<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ specifiedUser["name"] }} ({{ specifiedUser["id"] }})</h1>
+            <a class="submit-link" href="mailto:{{ specifiedUser['email'] }}" style="color: white; float: right; margin-right: 150px; margin-top: 0px;">Message</a>
+            {% if currentUser["type"] == "Doctor" %}
+                {% set count = [] %}
+                {% for patient in currentUser["patients"] %}
+                    {% if patient["id"] == specifiedUser["id"] %}
+                        <!-- <a class="submit-link" href="/doctorrequest:{{ specifiedUser['id'] }}" style="color: white; float: right; margin-right: 25px; margin-top: 0px;">Request</a> -->
+                        {% set x = count.append(0) %}
+                    {% endif %}
+                {% endfor %}
+
+
+                {% if count|length == 0 %}
+                    <a class="submit-link" href="/doctorrequest:{{ specifiedUser['id'] }}" style="color: white; float: right; margin-right: 25px; margin-top: 0px;">Request</a>
+                {% else %}
+                    <a class="submit-link" href="/doctoredit:{{ specifiedUser['id'] }}" style="color: white; float: right; margin-right: 25px; margin-top: 0px;">Edit</a>
+                {% endif %}                
+            {% endif %}
             <br><br><br><br>
 			
-            <div class="section" style="width: 1350px; height: 450px;">
+            <div class="section" style="width: 1350px; height: 450px; overflow-y: auto;">
                 <br><br>
                 
                 <div style="float: left; text-align: left; margin-left: 150px;">
-                    {% if specifiedUser["vaccine"] %}
+                    {% if specifiedUser["vaccines"]|length > 0 %}
                         <h1 style="font-size: 48px; font-weight: 600;">Vaccinations:</h1>
-                        <ul style="font-size: 36px;">
-                            <li>January 7th, 2021</li>
-                            <li>February 24th, 2021</li>
-                        </ul>
+                        <ol style="font-size: 36px;">
+                            {% for vaccine in specifiedUser["vaccines"] %}
+                                <li>{{ vaccine }}</li>
+                            {% endfor %}
+                        </ol>
                     {% else %}
-                        <h1 style="color: rgb(226, 113, 113)">Unvaccinated</h1>
+                        <h1 style="color: rgb(226, 113, 113); font-size: 48px; font-weight: 600;">Unvaccinated</h1>
+                        <ul style="font-size: 36px; font-style: italic;">
+                            <li>No vaccinations</li>
+                        </ul>
                     {% endif %}
                 </div>
 
-                <div style="float: left; text-align: left; margin-left: 150px;">
+                <div style="float: left; text-align: left; margin-left: 250px;">
                     <h1 style="font-size: 48px; font-weight: 600;">COVID-19 Exposure:</h1>
                     <ul style="font-size: 36px;">
-                        <li>Tested Positive: September 9th, 2020</li>
-                        <li>Recovered: October 17th, 2020</li>
+                        {% if specifiedUser["exposure"]|length > 0 %}
+                            {% for exposure in specifiedUser["exposure"] %}
+                                <li>{{ exposure }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No COVID-19 exposure</li>
+                        {% endif %}
                     </ul>
                 </div>
                 
-                <div style="float: left; text-align: left; margin-left: 450px; margin-top: 25px;">
-                    <h1 style="font-size: 48px; font-weight: 600;">Past/Current Conditions:</h1>
+                <div style="float: left; text-align: left; margin-left: 150px; margin-top: 25px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">Past Conditions:</h1>
                     <ul style="font-size: 36px; padding-left: 100px;">
-                        <li>Asthma (lifelong)</li>
-                        <li>Asthma (lifelong)</li>
+                        {% if specifiedUser["conditions"]|length > 0 %}
+                            {% for condition in specifiedUser["conditions"] %}
+                                <li>{{ condition }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No past conditions</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div style="float: left; text-align: left; margin-left: 150px; margin-top: 25px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">Recent Trips:</h1>
+                    <ul style="font-size: 36px; padding-left: 100px;">
+                        {% if specifiedUser["trips"]|length > 0 %}
+                            {% for trip in specifiedUser["trips"] %}
+                                <li>{{ trip }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No recent trips</li>
+                        {% endif %}
                     </ul>
                 </div>
 

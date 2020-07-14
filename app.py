@@ -8,7 +8,7 @@ app.secret_key = "hello there"
 
 # alert = {
 #     "type": "invite", # invite, delete, or doctor update
-#     "from": "N4I2N521",
+#     "from": admin,
 # }
 
 users = []
@@ -21,9 +21,18 @@ admin = {
     "type": "Manager",
     "organization": "VMware",
     "id": "2VDMPG18",
-    "vaccine": True,
+    "vaccines": ["1/7/2021"],
+    "exposure": ["Tested Positive: 9/9/2020", "Recovered: 10/17/2020"],
+    "conditions": ["Asthma (lifelong)"],
+    "trips": ["Canada (returned 8/24/2020)"],
     "profile": "/profile_4.jpg",
-    "alerts": []
+    "alerts": [],
+    "patients": []
+}
+
+alert = {
+    "type": "invite",
+    "from": admin
 }
 
 kevin = {
@@ -34,9 +43,13 @@ kevin = {
     "type": "Member",
     "organization": "VMware",
     "id": "6U8LJY87",
-    "vaccine": True,
+    "vaccines": [],
+    "exposure": [],
+    "conditions": [],
+    "trips": [],
     "profile": "/profile_1.jpeg",
-    "alerts": []
+    "alerts": [],
+    "patients": []
 }
 
 rob = {
@@ -47,28 +60,61 @@ rob = {
     "type": "Member",
     "organization": "VMware",
     "id": "C54N521B",
-    "vaccine": False,
+    "vaccines": [],
+    "exposure": [],
+    "conditions": [],
+    "trips": [],
     "profile": "/profile_2.jpg",
-    "alerts": []
+    "alerts": [],
+    "patients": []
 }
 
 nancy = {
-    "email": "nancybush@gmail.com",
+    "email": "nancydavis@gmail.com",
     "password": "hello123",
-    "name": "Nancy Bush",
+    "name": "Nancy Davis",
     "dob": "1996-01-29",
-    "type": "Doctor",
+    "type": "Member",
     "organization": "VMware",
     "id": "9E9V5XQ1",
-    "vaccine": True,
+    "vaccines": [],
+    "exposure": [],
+    "conditions": [],
+    "trips": ["New Zealand (returned 12/6/20)"],
     "profile": "/profile_3.jpg",
-    "alerts": []
+    "alerts": [],
+    "patients": []
 }
+
+joe = {
+    "email": "joesmith@gmail.com",
+    "password": "hello123",
+    "name": "Joe Smith",
+    "dob": "1984-05-29",
+    "type": "Doctor",
+    "hospital": "Stanford Health",
+    "id": "34B46AA0",
+    "vaccines": ["3/2/2021"],
+    "exposure": [],
+    "conditions": [],
+    "trips": [],
+    "profile": "/profile_5.jpg",
+    "alerts": [],
+    "patients": [nancy]
+}
+
+fired = {
+    "type": "delete",
+    "from": rob
+}
+
+kevin["alerts"].append(fired)
 
 users.append(admin)
 users.append(kevin)
 users.append(rob)
 users.append(nancy)
+users.append(joe)
 
 @app.route("/", methods=["POST", "GET"])
 @app.route("/home", methods=["POST", "GET"])
@@ -118,8 +164,10 @@ def register():
         # Get register form data
         
         type = request.form["type"]
+        org = request.form["organization"]
         if type == "1":
-            type = "General User"
+            type = "Member"
+            org = None
         elif type == "2":
             type = "Doctor"
         else:
@@ -131,11 +179,15 @@ def register():
             "name": request.form["nm"],
             "dob": request.form["dob"],
             "type": type,
-            "organization": None,
+            "organization": org,
             "id": generateID(),
-            "vaccine": False,
+            "vaccines": [],
+            "exposure": [],
+            "conditions": [],
+            "trips": [],
             "profile": "/default_profile.png",
-            "alerts": []
+            "alerts": [],
+            "patients": []
         }
 
         accountExists = False
@@ -164,34 +216,291 @@ def register():
 def members():
     global users
 
-    return render_template("members.html")
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Manager":
+            return render_template("members.html")
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
 
-@app.route('/<id>')
+@app.route("/patients", methods=["POST", "GET"])
+def patients():
+    global users
+
+    if "currentUser" in session:
+        
+        if session["currentUser"]["type"] == "Doctor":
+            session.modified = True
+            return render_template("patients.html")
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/alerts", methods=["POST", "GET"])
+def alerts():
+    global users
+
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Member":
+            return render_template("alerts.html")
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/settings", methods=["POST", "GET"])
+def settings():
+    global users
+
+    if "currentUser" in session:
+        return render_template("settings.html")
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/edit", methods=["POST", "GET"])
+def edit():
+    global users
+
+    if request.method == "POST":
+        
+        currentUser = session["currentUser"]
+
+        exposure = request.form["exposure"].split(", ")
+        if len(exposure) != 1 or exposure[0] != '':
+            currentUser["exposure"] = request.form["exposure"].split(", ")
+
+        conditions = request.form["conditions"].split(", ")
+        if len(conditions) != 1 or conditions[0] != '':
+            currentUser["conditions"] = request.form["conditions"].split(", ")
+
+        trips = request.form["trips"].split(", ")
+        if len(trips) != 1 or trips[0] != '':
+            currentUser["trips"] = request.form["trips"].split(", ")
+        
+        session["currentUser"] = currentUser
+        session.modified = True
+
+        return redirect(url_for('settings'))
+
+    if "currentUser" in session:
+        return render_template("edit.html")
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/doctoredit:<id>", methods=["POST", "GET"])
+def doctoredit(id):
+    global users
+
+    if request.method == "POST":
+        
+        if session["currentUser"]["type"] == "Doctor":
+            for user in users:
+                if id == user["id"]:
+                    for patient in session["currentUser"]["patients"]:
+                        if patient["id"] == id:
+                            vaccinations = request.form["vaccinations"].split(", ")
+                            if len(vaccinations) == 1 and vaccinations[0] == '' and len(patient["vaccines"]) > 0:
+                                patient["vaccines"] = []
+                            elif len(vaccinations) != 1 or vaccinations[0] != '':
+                                patient["vaccines"] = request.form["vaccinations"].split(", ")
+
+                            exposure = request.form["exposure"].split(", ")
+                            if len(exposure) == 1 and exposure[0] == '' and len(patient["exposure"]) > 0:
+                                patient["exposure"] = []
+                            elif len(exposure) != 1 or exposure[0] != '':
+                                patient["exposure"] = request.form["exposure"].split(", ")
+
+                            conditions = request.form["conditions"].split(", ")
+                            if len(conditions) == 1 and conditions[0] == '' and len(patient["conditions"]) > 0:
+                                patient["conditions"] = []
+                            elif len(conditions) != 1 or conditions[0] != '':
+                                patient["conditions"] = request.form["conditions"].split(", ")
+
+                            trips = request.form["trips"].split(", ")
+                            if len(trips) == 1 and trips[0] == '' and len(patient["trips"]) > 0:
+                                patient["trips"] = []
+                            elif len(trips) != 1 or trips[0] != '':
+                                patient["trips"] = request.form["trips"].split(", ")
+                            
+                            updateAlert = {
+                                "type": "doctor_update",
+                                "from": session["currentUser"]
+                            }
+
+                            # patient["alerts"].append(updateAlert)
+                            
+                            session.modified = True
+                            return render_template("user.html", specifiedUser=patient)
+                            # return redirect(url_for('user', id=patient["id"]))
+
+                    # return redirect(url_for('user', id=user["id"]))
+                    return render_template("user.html", specifiedUser=user)
+            return redirect(url_for('index'))
+        else:
+            return redirect(url_for('index'))
+
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Doctor":
+            for user in users:
+                if id == user["id"]:
+                    for patient in session["currentUser"]["patients"]:
+                        if id == patient['id']:
+                            return render_template("doctoredit.html", specifiedUser=patient)
+                    return redirect(url_for('user', id=user["id"]))
+            return redirect(url_for('patients'))
+        else:
+            return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/user:<id>')
 def user(id):
+    global users
 
-    for user in users:
-        if user["id"] == id:
-            return render_template("user.html", specifiedUser=user)
+    if "currentUser" in session:
+        if id == session["currentUser"]["id"]:
+            return redirect(url_for("settings"))
+        
+        if session["currentUser"]["type"] == "Doctor":
+            for user in users:
+                if user["id"] == id:
+                    for patient in session["currentUser"]["patients"]:
+                        if patient["id"] == user["id"]:
+                            return render_template("user.html", specifiedUser=patient)
+        else:
+            for user in users:
+                if user["id"] == id:
+                    return render_template("user.html", specifiedUser=user)
 
-    return redirect(url_for("members"), code=302)
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/invite:<id>')
+def invite(id):
+    global users
+    
+    if "currentUser" in session:
+        for user in users:
+            if user["id"] == id:
+
+                inviteAlert = {
+                    "type": "invite", # invite, delete, or doctor update
+                    "from": session["currentUser"]
+                }
+                user["alerts"].append(inviteAlert)
+
+                break
+
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
 
 @app.route('/delete:<id>')
 def delete(id):
     global users
 
-    for user in users:
-        if user["id"] == id:
+    if "currentUser" in session:
+        for user in users:
+            if user["id"] == id:
 
-            deleteAlert = {
-                "type": "delete", # invite, delete, or doctor update
-                "from": session["currentUser"]["id"]
-            }
-            user["alerts"].append(deleteAlert)
+                if session["currentUser"]["type"] == "Doctor":
+                    deleteAlert = {
+                        "type": "doctor_delete",
+                        "from": session["currentUser"]
+                    }
+                    session["currentUser"]["patients"].remove(user)
+                    # print(session["currentUser"]["name"] + " has " + str(len(session["currentUser"]["patients"])) + " patients.")
+                    user["alerts"].append(deleteAlert)
+                    session.modified = True
+                    return redirect(url_for("patients"))
+                else:
+                    deleteAlert = {
+                        "type": "delete",
+                        "from": session["currentUser"]
+                    }
+                    user["organization"] = None
+                    user["alerts"].append(deleteAlert)
+                    session.modified = True
+                    return redirect(url_for("members"))
 
-            user["organization"] = None
-            break
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
 
-    return redirect(url_for("members"), code=302)
+@app.route('/doctorrequest:<id>')
+def doctorrequest(id):
+    global users
+
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Doctor":
+            for user in users:
+                if user["id"] == id:
+
+                    doctorReqAlert = {
+                        "type": "doctor_request", # invite, delete, or doctor update
+                        "from": session["currentUser"]
+                    }
+                    user["alerts"].append(doctorReqAlert)
+                    session.modified = True
+
+                    break
+
+            session.modified = True
+            return redirect(url_for("alerts"))
+
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/removealert:<type>,<id>')
+def removealert(type, id):
+    global users
+
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Member":
+            for alert in session["currentUser"]["alerts"]:
+                if alert["from"]["id"] == id and alert["type"] == type:
+
+                    session["currentUser"]["alerts"].remove(alert)
+                    session.modified = True
+                    break
+
+            return redirect(url_for("alerts"))
+
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/accept:<type>,<id>')
+def accept(type, id):
+    global users
+    global rob
+
+    if "currentUser" in session:
+        if session["currentUser"]["type"] == "Member":
+            for alert in session["currentUser"]["alerts"]:
+                if alert["from"]["id"] == id and alert["type"] == type:
+
+                    if type == "invite":
+                        session["currentUser"]["organization"] = alert["from"]["organization"]
+                    elif type == "doctor_request":
+                        # alert["from"]["patients"].append(session["currentUser"])
+                        alert["from"]["patients"].append(rob)
+
+                    session["currentUser"]["alerts"].remove(alert)
+                    
+                    session.modified = True
+                    return redirect(url_for("alerts"))
+
+            # print(alert["from"]["name"] + " has " + str(len(alert["from"]["patients"])) + " patients.")
+            return redirect(url_for("alerts"))
+
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
@@ -265,9 +574,16 @@ def profile_4():
     filename = 'profile_4.jpg'
     return send_file(filename, mimetype='image/jpg')
 
+@app.route('/profile_5.jpg')
+def profile_5():
+    filename = 'profile_5.jpg'
+    return send_file(filename, mimetype='image/jpg')
+
 @app.context_processor
 def context_processor():
     global users
+
+    session.modified = True
 
     isLoggedIn = False
     currentUser = None

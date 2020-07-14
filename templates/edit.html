@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<!-- CSS stylesheets -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/static.css') }}">
+		<!-- JavaScripts -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/primary.js') }}"></script>
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+		<!-- Icons -->
+		<script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
+		
+		<title>VeriVax</title>
+	</head>
+
+	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;" onload="updateField(false)">
+		<div id="navbar">
+			<a class="klasse-title" href="/">VeriVax</a>
+			<a class="navlink" href="/">Home</a>
+			<a class="navlink" href="/members">Members</a>
+			<a class="navlink active" href="/settings">Settings</a>
+			<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+		</div>
+		
+        <div style="padding-left: 90px; padding-top: 10px;">
+            <img class="user-profile" src={{ currentUser["profile"] }} alt="profile" style="float: left; margin-left: 50px;">
+			<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ currentUser["name"] }} ({{ currentUser["id"] }})</h1>
+            <br><br><br><br>
+			
+            <div class="section" style="width: 1350px; height: 450px; overflow-y: auto;">
+                <br><br>
+                
+                <form class="needs-validation" novalidate action="{{ url_for('edit') }}" method="post">
+                    <div class="form-group">
+                        <div style="text-align: left; padding: 0% 150px;">
+                            <label><b>COVID-19 Exposure</b></label>
+                            <div>
+                                <input type="text" id="exposureField" class="form-control" name="exposure" value="{{ currentUser['exposure'] }}">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <div style="text-align: left; padding: 0% 150px;">
+                            <label><b>Past Conditions</b></label>
+                            <div>
+                                <input type="text" id="conditionsField" class="form-control" name="conditions" value="{{ currentUser['conditions'] }}">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <div style="text-align: left; padding: 0% 150px;">
+                            <label><b>Recent Trips</b></label>
+                            <div>
+                                <input type="text" id="tripsField" class="form-control" name="trips" value="{{ currentUser['trips'] }}">
+                            </div>
+                        </div>
+                        <br><br>
+                        <button class="submit-button" type="submit"><a class="submit-link" style="color: white;">Save</a></button>
+                    </div>
+                </form>
+
+            </div>
+
+		</div>
+		<br>
+	</body>
+</html>

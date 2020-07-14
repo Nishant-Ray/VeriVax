@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<!-- CSS stylesheets -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/static.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+		<!-- JavaScripts -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/primary.js') }}"></script>
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+		<!-- Icons -->
+		<script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
+		
+		<title>VeriVax</title>
+	</head>
+
+	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;">
+		{% if currentUser["type"] == "Manager" %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/members">Members</a>
+                <a class="navlink active" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% elif currentUser["type"] == "Member" %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/alerts">Alerts</a>
+                <a class="navlink active" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% else %}
+            <div id="navbar">
+                <a class="klasse-title" href="/">VeriVax</a>
+                <a class="navlink" href="/">Home</a>
+                <a class="navlink" href="/patients">Patients</a>
+                <a class="navlink active" href="/settings">Settings</a>
+                <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+            </div>
+        {% endif %}
+		
+        <div style="padding-left: 90px; padding-top: 10px;">
+            <img class="user-profile" src={{ currentUser["profile"] }} alt="profile" style="float: left; margin-left: 50px;">
+			<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ currentUser["name"] }} ({{ currentUser["id"] }})</h1>
+            <a class="submit-link" href="/logout" style="color: white; float: right; margin-right: 150px; margin-top: 0px;">Logout</a>
+            <a class="submit-link" href="/edit" style="color: white; float: right; margin-right: 25px; margin-top: 0px;">Edit</a>
+            <br><br><br><br>
+			
+            <div class="section" style="width: 1350px; height: 450px; overflow-y: auto;">
+                <br><br>
+                
+                <div style="float: left; text-align: left; margin-left: 150px;">
+                    {% if currentUser["vaccines"]|length > 0 %}
+                        <h1 style="font-size: 48px; font-weight: 600;">Vaccinations:</h1>
+                        <ol style="font-size: 36px;">
+                            {% for vaccine in currentUser["vaccines"] %}
+                                <li>{{ vaccine }}</li>
+                            {% endfor %}
+                        </ol>
+                    {% else %}
+                        <h1 style="color: rgb(226, 113, 113); font-size: 48px; font-weight: 600;">Unvaccinated</h1>
+                        <ul style="font-size: 36px; font-style: italic;">
+                            <li>No vaccinations</li>
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div style="float: left; text-align: left; margin-left: 250px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">COVID-19 Exposure:</h1>
+                    <ul style="font-size: 36px;">
+                        {% if currentUser["exposure"]|length > 0 %}
+                            {% for exposure in currentUser["exposure"] %}
+                                <li>{{ exposure }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No COVID-19 exposure</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <div style="float: left; text-align: left; margin-left: 150px; margin-top: 25px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">Past Conditions:</h1>
+                    <ul style="font-size: 36px; padding-left: 100px;">
+                        {% if currentUser["conditions"]|length > 0 %}
+                            {% for condition in currentUser["conditions"] %}
+                                <li>{{ condition }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No past conditions</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div style="float: left; text-align: left; margin-left: 150px; margin-top: 25px;">
+                    <h1 style="font-size: 48px; font-weight: 600;">Recent Trips:</h1>
+                    <ul style="font-size: 36px; padding-left: 100px;">
+                        {% if currentUser["trips"]|length > 0 %}
+                            {% for trip in currentUser["trips"] %}
+                                <li>{{ trip }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="font-style: italic;">No recent trips</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+
+		</div>
+		<br>
+	</body>
+</html>

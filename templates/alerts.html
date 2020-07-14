@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<!-- CSS stylesheets -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/static.css') }}">
+		<!-- JavaScripts -->
+		<script type="text/javascript" src="{{ url_for('static', filename='js/primary.js') }}"></script>
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap" rel="stylesheet">
+		<!-- Icons -->
+		<script src="https://kit.fontawesome.com/deef0bf4ed.js" crossorigin="anonymous"></script>
+		
+		<title>VeriVax</title>
+	</head>
+
+	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;">
+		<div id="navbar">
+            <a class="klasse-title" href="/">VeriVax</a>
+            <a class="navlink" href="/">Home</a>
+            <a class="navlink active" href="/alerts">Alerts</a>
+            <a class="navlink" href="/settings">Settings</a>
+            <img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+        </div>
+		
+		<div style="padding-left: 90px; padding-top: 10px;">
+			<h1 class="title" style="padding-left: 40px;">Your Alerts</h1>
+			<br>
+
+            <div class="section" style="width: 1350px; height: 450px; overflow-y: auto;">
+                <br><br>
+
+                {% for alert in currentUser["alerts"] %}
+                    <div style="text-align: left; padding-left: 0;">
+                        <img class="user-profile" src={{ alert["from"]["profile"] }} alt="profile" style="float: left; margin-left: 250px;" onclick="window.open('/user:{{ alert["from"]['id'] }}', '_self')">
+                        <div style="float: left; margin-top: 0px; margin-left: 25px;">
+                            <h2 style="cursor: pointer;" onclick="window.open('/user:{{ alert["from"]['id'] }}', '_self')">
+                                <span style="font-weight: 600;">{{ alert["from"]["name"] }} ({{ alert["from"]["id"] }})</span>
+                                <br>
+                                {% if alert["type"] == "invite" %}
+                                    <span style="font-size: 28px;">Invited you to {{ alert["from"]["organization"] }}</span>
+                                {% elif alert["type"] == "delete" %}
+                                    <span style="font-size: 28px;">Removed you from {{ alert["from"]["organization"] }}</span>
+                                {% elif alert["type"] == "doctor_request" %}
+                                    <span style="font-size: 28px;">Requested to edit your profile</span>
+                                {% else %}
+                                    <span style="font-size: 28px;">Updated your profile</span>
+                                {% endif %}
+                            </h2>
+                        </div>
+
+                        <div style="float: right; margin-right: 350px;">
+                            {% if alert["type"] == "invite" or alert["type"] == "doctor_request" %}
+                                <a href="/accept:{{ alert['type'] }},{{ alert['from']['id'] }}" target="_self" class="icon positive" style="display: inline-block;">
+                                    <div>
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </div>
+                                </a>
+                                <a href="/removealert:{{ alert['type'] }},{{ alert['from']['id'] }}" target="blank" class="icon negative" style="display: inline-block;">
+                                    <div>
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <a href="/removealert:{{ alert['type'] }},{{ alert['from']['id'] }}" target="blank" class="icon negative" style="display: inline-block;">
+                                    <div>
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br><br><br><br>
+
+                {% endfor %}
+            </div>
+
+		</div>
+		<br>
+	</body>
+</html>
