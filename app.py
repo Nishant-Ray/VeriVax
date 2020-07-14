@@ -57,7 +57,7 @@ nancy = {
     "password": "hello123",
     "name": "Nancy Bush",
     "dob": "1996-01-29",
-    "type": "Member",
+    "type": "Doctor",
     "organization": "VMware",
     "id": "9E9V5XQ1",
     "vaccine": True,

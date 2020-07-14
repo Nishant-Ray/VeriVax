@@ -32,11 +32,11 @@
 		<div style="padding-left: 90px; padding-top: 10px;">
 			<h1 class="title" style="padding-left: 40px;">Your Members</h1>
 			<br>
-			
+
             <div class="section" style="width: 1350px; height: 450px; overflow-y: auto;">
                 <br><br>
+
                 {% for user in users if user["organization"] != None and user["id"] != currentUser["id"] and count|length < 3 %}
-                    
                     <div style="text-align: left; padding-left: 0;">
                         <img class="user-profile" src={{ user["profile"] }} alt="profile" style="float: left; margin-left: 250px;" onclick="window.open('/{{ user['id'] }}', '_self')">
                         <div style="float: left; margin-top: 0px; margin-left: 25px;">

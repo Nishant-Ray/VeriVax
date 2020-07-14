@@ -61,15 +61,30 @@
                 </div>
             </div>
             <br>
+            <script type="text/javascript">
+                function EnableDisableTextBox(inputGroupSelect01) {
+                    var selectedValue = inputGroupSelect01.options[inputGroupSelect01.selectedIndex].value;
+                    var Check = document.getElementById("Check");
+                    Check.disabled = (selectedValue == 2 || selectedValue == 3) ? false : true;
+                    if (!Check.disabled) {
+                        Check.focus();
+                    }
+                }
+            </script>
             <div class="form-group">
                 <div style="text-align: left; padding: 0% 150px;">
                     <label for="validationCustom03"><b>User Type</b></label>
-                    <select class="custom-select" id="inputGroupSelect01" name="type" style="height: 50px; font-size: 22px; color: black;">
+                    <select class="custom-select" id="inputGroupSelect01" name="type" style="height: 50px; font-size: 22px; color: black;" onchange = "EnableDisableTextBox(this)">
                         <option selected disabled>Choose...</option>
                         <option value="1">General User</option>
                         <option value="2">Doctor</option>
                         <option value="3">Institution Manager</option>
                     </select>
+                    <br> <br>
+                    <div>
+                        <label><b>Institution Name (if applicable): </b></label>
+                        <input type="text" class="form-control" id="Check" disabled="disabled" />
+                    </div>
                     <div class="valid-feedback">
                         Looks good!
                     </div>

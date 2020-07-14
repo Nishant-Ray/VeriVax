@@ -21,19 +21,20 @@
 	</head>
 
 	<body style="font-family: 'Source Sans Pro', sans-serif; background-color: rgb(23, 23, 29); overflow-y: hidden;">
-		<div id="navbar">
-			<a class="klasse-title" href="/">Vaccify</a>
-			<a class="navlink active" href="/">Home</a>
-			<a class="navlink" href="/members">Members</a>
-			<a class="navlink" href="/settings">Settings</a>
-			<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
-		</div>
 		
-		<div style="padding-left: 90px; padding-top: 10px;">
-			<h1 class="title" style="padding-left: 40px;">Welcome {{ currentUser["name"] }}!</h1>
-			<br>
-
 			{% if currentUser["type"] == "Manager" %}
+				<div id="navbar">
+					<a class="klasse-title" href="/">Vaccify</a>
+					<a class="navlink active" href="/">Home</a>
+					<a class="navlink" href="/members">Members</a>
+					<a class="navlink" href="/settings">Settings</a>
+					<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+				</div>	
+
+				<div style="padding-left: 90px; padding-top: 10px;">
+					<h1 class="title" style="padding-left: 40px;">Welcome {{ currentUser["name"] }}!</h1>
+					<br>
+				</div>
 
 				<div>
 					<div class="section" style="height: 475px; text-align: left;">
@@ -108,14 +109,141 @@
 					</div>
 				</div>
 
-			{% elif currentUser["type"] == "General User" %}
-			
-				<!-- PRANAV WORK HERE -->
-			
+			{% elif currentUser["type"] == "Member" %}
+				<div id="navbar">
+					<a class="klasse-title" href="/">Vaccify</a>
+					<a class="title" style="padding-left: 40px;">Welcome {{ currentUser["name"] }}!</a>
+					<img class="profile" src={{ currentUser["profile"] }} alt="profile">
+				</div>	
+
+				<div style="padding-left: 90px; padding-top: 10px;">
+					
+					<br>
+				</div>
+
+				<div style="padding-left: 90px; padding-top: 10px;">
+					<img class="user-profile" src={{ currentUser["profile"] }} alt="profile" style="float: left; margin-left: 50px;">
+					<h1 class="title" style="float: left; margin-left: 20px; margin-top: 10px;">{{ currentUser["name"] }}, Born on June 7th, 1991</h1>
+					<br><br><br><br>
+					
+					<div class="section" style="width: 1350px; height: 450px;">
+						<br><br>
+						
+						<div style="float: left; text-align: left; margin-left: 150px;">
+							{% if currentUser["vaccine"] %}
+								<h1 style="font-size: 48px; font-weight: 600;">Vaccinations:</h1>
+								<ul style="font-size: 36px;">
+									<li>Taken on December 20XX</li>
+									<li>Taken on March 20XX</li>
+								</ul>
+							{% else %}
+								<h1 style="color: rgb(226, 113, 113)">Unvaccinated</h1>
+							{% endif %}
+						</div>
+		
+						<div style="float: left; text-align: left; margin-left: 150px;">
+							<h1 style="font-size: 48px; font-weight: 600;">COVID-19 Exposure:</h1>
+							<ul style="font-size: 36px;">
+								<li>Tested Positive: September 9th, 2020</li>
+								<li>Recovered: October 17th, 2020</li>
+							</ul>
+						</div>
+						
+						<div style="float: left; text-align: left; margin-left: 450px; margin-top: 25px;">
+							<h1 style="font-size: 48px; font-weight: 600;">Past/Current Conditions:</h1>
+							<ul style="font-size: 36px; padding-left: 100px;">
+								<li>Asthma (lifelong)</li>
+								<li>Asthma (lifelong)</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			{% else %}
-			
+				<div id="navbar">
+					<a class="klasse-title" href="/">Vaccify</a>
+					<a class="navlink active" href="/">Home</a>
+					<a class="navlink" href="/members">Members</a>
+					<a class="navlink" href="/settings">Settings</a>
+					<img class="profile" src={{ currentUser["profile"] }} alt="profile" onclick="window.open('/settings', '_self')">
+				</div>	
+
+				<div style="padding-left: 90px; padding-top: 10px;">
+					<h1 class="title" style="padding-left: 40px;">Welcome {{ currentUser["name"] }}!</h1>
+					<br>
+				</div>
+
+				<div>
+					<div class="section" style="height: 475px; text-align: left;">
+						<br>
+						<h1 class="subtitle" style="text-align: center;">Patients</h1>
+						<br>
+						{% set count = [] %}
+						{% for user in users if user["organization"] != None and user["id"] != currentUser["id"] and count|length < 3 %}
+							
+							<div style="text-align: left; padding-left: 125px;">
+								<img class="user-profile" src={{ user["profile"] }} alt="profile" onclick="window.open('/{{ user['id'] }}', '_self')">
+								<div style="float: right; margin-top: 0px; margin-right: 100px;">
+									<h2 style="cursor: pointer;" onclick="window.open('/{{ user['id'] }}', '_self')">
+										<span style="font-weight: 600;">{{ user["name"] }} ({{ user["id"] }})</span>
+										<br>
+										{% if user["vaccine"] %}
+											<span style="font-size: 28px;">Vaccinated</span>
+										{% else %}
+											<span style="font-size: 28px; color: rgb(226, 113, 113);">Unvaccinated</span>
+										{% endif %}
+									</h2>
+								</div>
+							</div>
+							<br>
+
+							{% set x = count.append(0) %}
+						{% endfor %}
+
+						<div style="text-align: center; margin-top: 10px;">
+							<a class="submit-link" href="/members" style="margin: auto;">View More</a>
+						</div>
+					</div>
+
+					<div class="section" style="height: 200px;">
+						<br>
+						<h1 class="subtitle">Add Patients</h1>
+						<br>
+						<form class="needs-validation" novalidate action="{{ url_for('index') }}" method="post">
+							<div class="form-group">
+								<div style="text-align: left;">
+									<input type="text" class="form-control" name="pw" placeholder="ID" id="validationCustom02" required style="width: 400px; margin: auto; margin-left: 50px;">
+									<button class="submit-button" type="submit" style="float: right; margin-top: -50px; margin-right: 50px;"><a class="submit-link" style="color: white;">Send</a></button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 				
-			
+				<br>
+
+				<div class="section" style="height: 200px; visibility: hidden;">
+					IGNORE THIS
+				</div>
+
+				<div class="section" style="margin-top: -275px;">
+					<br>
+					<h1 class="subtitle">Your Profile</h1>
+					
+					<div style="text-align: left; padding-left: 125px;">
+						<img class="user-profile" src="/profile_3.jpg" alt="profile">
+						<div style="float: right; margin-top: 0px; margin-right: 125px;">
+							<h2>
+								<span style="font-weight: 600;">Nancy Bush ({{ currentUser["id"] }})</span>
+								<br>
+								<span style="font-size: 28px;">Vaccinated</span>
+							</h2>
+						</div>
+					</div>
+					<br>
+					<div style="text-align: center; margin-top: 10px;">
+						<a class="submit-link" href="/settings" style="margin: auto;">Edit</a>
+					</div>
+				</div>
 			{% endif %}
 		</div>
 		<br>
